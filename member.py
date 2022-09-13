@@ -20,7 +20,7 @@ def member_page(tabs):
     with tab1:
         st.header("My Overview")
         st.write("Here you can find the overview of the courses you are currently working on.")
-
+        
 
     with tab2:
         st.header("My ITDP Group")
@@ -31,3 +31,4 @@ def member_page(tabs):
         st.header("Compare")
         st.write("Here you can compare yourself and your group to other groups and members.")
         
+
