@@ -15,6 +15,7 @@ This is our project as a part of hackaton FY23.
         pip install pandas
         pip install streamlit
         pip install streamlit-on-Hover-tabs
+        pip install plotly-express
     ```
 
 3. Run web site
