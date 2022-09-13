@@ -1,5 +1,4 @@
 import streamlit as st
-<<<<<<< HEAD
 
 def manager_page(tabs):
     st.header("I am manager")
@@ -15,7 +14,6 @@ def manager_page(tabs):
         st.bokeh_chart(div)
             
             
-=======
 import pandas as pd
 import plotly.express as px  # pip install plotly-express   
 
@@ -123,4 +121,4 @@ def manager_page(tabs):
     left_column2, right_column2 = st.columns(2)
     left_column2.plotly_chart(fig_last_activity_by_region, use_container_width=True)
     right_column2.plotly_chart(fig2, use_container_width=True)
->>>>>>> b05ba02ce6b27f39cd3235dc79a042e4cfc7af63
+
