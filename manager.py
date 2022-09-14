@@ -32,8 +32,15 @@ def aggrid_interactive_table(df: pd.DataFrame):
     return selection
 
 def aggrid_selection(selection):
-    st.write("You selected:")
-    st.json(selection["selected_rows"])
+    word_dict = {'y': 'Attended', 'n': 'Not Attended', 'x': 'Sign Up', 'None': 'Not Sign Up'}
+    
+    if selection['selected_rows']:
+        row = selection['selected_rows'][0]
+        del row['_selectedRowNodeInfo']
+
+        for k,v in row.items():
+            v = word_dict[str(v)] if str(v) in word_dict.keys() else v
+            st.metric(k, v)
 
 def manager_page(tabs):
     st.title(":bar_chart: ITDP  members overview")
