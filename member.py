@@ -12,7 +12,7 @@ def member_page(tabs):
     
     # button to link to the form
 
-    tab1, tab2, tab3 = st.tabs(["My Overview", "My ITDP Group", "Compare"])
+    tab1, tab2, tab3 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare"])
 
     with tab1:
         mock_user = df.iloc[0]
@@ -37,6 +37,10 @@ def member_page(tabs):
             st.subheader(f" 💻{total_enrolled}")
         
         
+    with tab2:
+        st.header("Training Outside Udemy/Learning Studio")
+        st.write("Here you can log hours outside Udemy/Learning Studio and see the status of your requests.")
+
         if st.button('Log hours outside Udemy and Learning Studio'):
             js = "window.open('https://forms.office.com/r/kN3vNjKJC5')"  # New tab or window
             html = '<img src onerror="{}">'.format(js)
@@ -46,11 +50,6 @@ def member_page(tabs):
         # This is a mock table    
         st.subheader('Status of my requests')
         st.dataframe(learning_log_data, width=1500)
-
-    with tab2:
-        st.header("My ITDP Group")
-        st.write("Here you can see the ITDP members in your group.")
-
         
     with tab3:
         st.header("Compare")
