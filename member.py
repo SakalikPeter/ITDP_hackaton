@@ -8,6 +8,7 @@ def member_page(tabs):
     st.write('Name of option is {}'.format(tabs))
     
     df = pd.read_excel("mock_data.xlsx")
+    learning_log_data = pd.read_excel('learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
     
     # button to link to the form
 
@@ -40,7 +41,11 @@ def member_page(tabs):
             js = "window.open('https://forms.office.com/r/kN3vNjKJC5')"  # New tab or window
             html = '<img src onerror="{}">'.format(js)
             div = Div(text=html)
-            st.bokeh_chart(div)    
+            st.bokeh_chart(div)
+            
+        # This is a mock table    
+        st.subheader('Status of my requests')
+        st.dataframe(learning_log_data, width=1500)
 
     with tab2:
         st.header("My ITDP Group")
