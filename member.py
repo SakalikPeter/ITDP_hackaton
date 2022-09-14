@@ -4,9 +4,8 @@ from bokeh.models.widgets import Div
 import plotly.express as px
 from PIL import Image
 
-def member_page(tabs):
+def member_page():
     st.header("I am member of ITDP")
-    st.write('Name of option is {}'.format(tabs))
     
     df = pd.read_excel("mock_data.xlsx")
     learning_log_data = pd.read_excel('learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])

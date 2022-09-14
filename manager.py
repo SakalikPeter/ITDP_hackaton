@@ -35,7 +35,7 @@ def aggrid_selection(selection):
     st.write("You selected:")
     st.json(selection["selected_rows"])
 
-def manager_page(tabs):
+def manager_page():
     st.title(":bar_chart: ITDP  members overview")
     df = pd.read_excel("mock_data.xlsx")
 

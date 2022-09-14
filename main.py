@@ -12,16 +12,13 @@ st.set_page_config(layout="wide")
 names = ["ITDP MEMBER", "ITDP MANAGER"]
 usernames = ["itdp_member", "itdp_manager"]
 
-# load hashed passwords
 file_path = Path(__file__).parent / "hashed_pw.pkl"
 with file_path.open("rb") as file:
     hashed_passwords = pickle.load(file)
 
 
-#create authenticator 
 authenticator = stauth.Authenticate(names, usernames, hashed_passwords,
     "sales_dashboard", "abcdef", cookie_expiry_days=30)
-
 
 name, authentication_status, username = authenticator.login("Login", "main")
 
@@ -34,38 +31,15 @@ if authentication_status == None:
 if authentication_status and username == "itdp_manager":
 
     with st.sidebar:
-        #welcome manager with name and format it to bold
+        st.sidebar.image("Dell_Logo.png", width=100)
         st.markdown(f"**Welcome {name}**")
         authenticator.logout("Logout")
-        tabs = on_hover_tabs(tabName=['Manager'], 
-                            iconName=['manager'],
-                            styles = {'navtab': {'background-color':'#262730',
-                                                    'color': 'white',
-                                                    'font-size': '25px',
-                                                    'transition': '.3s',
-                                                    'white-space': 'nowrap',
-                                                    'text-transform': 'uppercase'}}, default_choice=0)
-
-
-    if tabs == 'Manager' :
-        manager_page(tabs)
+    manager_page()
 
 elif authentication_status and username == "itdp_member":
-
     with st.sidebar:
+        st.sidebar.image("Dell_Logo.png", width=100)
         st.markdown(f"**Welcome {name}**")
         authenticator.logout("Logout")
-        tabs = on_hover_tabs(tabName=[ 'ITDP member'], 
-                            iconName=[ 'person'],
-                            styles = {'navtab': {'background-color':'#262730',
-                                                    'color': 'white',
-                                                    'font-size': '25px',
-                                                    'transition': '.3s',
-                                                    'white-space': 'nowrap',
-                                                    'text-transform': 'uppercase'}}, default_choice=0)
-
-
-    
-    if tabs == 'ITDP member':
-        member_page(tabs)
+    member_page()
     
