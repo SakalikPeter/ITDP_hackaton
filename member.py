@@ -1,18 +1,13 @@
 import streamlit as st
 import pandas as pd
 from bokeh.models.widgets import Div
-
+import plotly.express as px
 
 def member_page(tabs):
     st.header("I am member of ITDP")
     st.write('Name of option is {}'.format(tabs))
     
     df = pd.read_excel("mock_data.xlsx")
-# =============================================================================
-#     training_data = pd.read_excel("mock_data.xlsx", sheet_name='Training Data')
-#     virtual_attendance = pd.read_excel("mock_data.xlsx", sheet_name='Virtual Attendance')
-#     event_sign_up = pd.read_excel("mock_data.xlsx", sheet_name='Event Sign-Up')
-# =============================================================================
     
     # button to link to the form
 
@@ -55,3 +50,50 @@ def member_page(tabs):
     with tab3:
         st.header("Compare")
         st.write("Here you can compare yourself and your group to other groups and members.")
+
+        st.subheader("Filter Here:")
+
+        left,mid= st.columns(2)
+        
+        groups = left.multiselect(
+            "Groups",
+            options=df["Groups"].unique(),
+            default=df["Groups"].unique()
+        )
+        
+        country = mid.multiselect(
+            "Work Country",
+            options=df["Work Country"].unique(),
+            default=df["Work Country"].unique()
+        )
+        
+        manager_name = st.multiselect(
+            "L5 Mgr Name",
+            options=df["L5 Mgr Name"].unique(),
+            default=df["L5 Mgr Name"].unique()
+        )
+        
+        top_n = st.slider(
+            "TOP N ITDP's", 
+            min_value = 1, 
+            max_value = len(df), 
+            value = 10, 
+            step = 1)
+        
+        df = df.query(
+            "Groups == @groups  & `L5 Mgr Name` ==@manager_name & `Work Country` == @country"
+        )
+        
+        #TOP N 
+        df = df.nlargest(n=top_n, columns=['Minutes Video Consumed'])
+        
+        #extract names from Email
+        names = df['Email'].str.split('@', expand=True)[0]
+        df['Name'] = names
+        
+        #BAR CHART
+        fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
+        fig_comparison.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+        fig_comparison.update_layout(uniformtext_minsize=8, uniformtext_mode='hide', yaxis=dict(autorange="reversed"))
+        
+        st.plotly_chart(fig_comparison, use_container_width=True)
