@@ -12,7 +12,7 @@ st.set_page_config(layout="wide")
 names = ["ITDP MEMBER", "ITDP MANAGER"]
 usernames = ["itdp_member", "itdp_manager"]
 
-file_path = Path(__file__).parent / "hashed_pw.pkl"
+file_path = Path(__file__).parent / "keygen/hashed_pw.pkl"
 with file_path.open("rb") as file:
     hashed_passwords = pickle.load(file)
 
@@ -31,14 +31,14 @@ if authentication_status == None:
 if authentication_status and username == "itdp_manager":
 
     with st.sidebar:
-        st.sidebar.image("Dell_Logo.png", width=100)
+        st.sidebar.image("img/Dell_Logo.png", width=100)
         st.markdown(f"**Welcome {name}**")
         authenticator.logout("Logout")
     manager_page()
 
 elif authentication_status and username == "itdp_member":
     with st.sidebar:
-        st.sidebar.image("Dell_Logo.png", width=100)
+        st.sidebar.image("img/Dell_Logo.png", width=100)
         st.markdown(f"**Welcome {name}**")
         authenticator.logout("Logout")
     member_page()

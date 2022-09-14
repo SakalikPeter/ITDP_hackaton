@@ -37,11 +37,11 @@ def aggrid_selection(selection):
 
 def manager_page():
     st.title(":bar_chart: ITDP  members overview")
-    df = pd.read_excel("mock_data.xlsx")
+    df = pd.read_excel("data/mock_data.xlsx")
 
-    training_data = pd.read_excel("mock_data.xlsx", sheet_name='Training Data')
-    virtual_attendance = pd.read_excel("mock_data.xlsx", sheet_name='Virtual Attendance')
-    event_sign_up = pd.read_excel("mock_data.xlsx", sheet_name='Event Sign-Up')
+    training_data = pd.read_excel("data/mock_data.xlsx", sheet_name='Training Data')
+    virtual_attendance = pd.read_excel("data/mock_data.xlsx", sheet_name='Virtual Attendance')
+    event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
 
     tab1, tab2, tab3, tab4 = st.tabs(["Training Data", "Virtual Attendance", "Event Sign-Up", "Stats"])
 

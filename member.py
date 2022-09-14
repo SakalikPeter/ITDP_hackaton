@@ -7,8 +7,8 @@ from PIL import Image
 def member_page():
     st.header("I am member of ITDP")
     
-    df = pd.read_excel("mock_data.xlsx")
-    learning_log_data = pd.read_excel('learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
+    df = pd.read_excel("data/mock_data.xlsx")
+    learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
     
     # button to link to the form
 
@@ -25,10 +25,10 @@ def member_page():
         total_started = int(mock_user["No# of New Courses Started"])
         total_enrolled = int(mock_user["No# of New Courses Enrolled"])
         
-        jay = Image.open('jay.jpg')
-        ok = Image.open('ok.jpg')
-        poor = Image.open('poor.jpg')
-        no = Image.open('no.jpg')
+        jay = Image.open('img/jay.jpg')
+        ok = Image.open('img/ok.jpg')
+        poor = Image.open('img/poor.jpg')
+        no = Image.open('img/no.jpg')
         
         left_column, middle_column, right_column = st.columns(3)
         with left_column:
