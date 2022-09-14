@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from bokeh.models.widgets import Div
 import plotly.express as px
+from PIL import Image
 
 def member_page(tabs):
     st.header("I am member of ITDP")
@@ -15,7 +16,7 @@ def member_page(tabs):
     tab1, tab2, tab3 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare"])
 
     with tab1:
-        mock_user = df.iloc[0]
+        mock_user = df.iloc[3]
         
         st.header("My Overview")
         st.subheader(f'You are logged in as {mock_user["Email"]}')
@@ -24,7 +25,12 @@ def member_page(tabs):
         total_minutes = int(mock_user["Minutes Video Consumed"])
         total_started = int(mock_user["No# of New Courses Started"])
         total_enrolled = int(mock_user["No# of New Courses Enrolled"])
-                
+        
+        jay = Image.open('jay.jpg')
+        ok = Image.open('ok.jpg')
+        poor = Image.open('poor.jpg')
+        no = Image.open('no.jpg')
+        
         left_column, middle_column, right_column = st.columns(3)
         with left_column:
             st.subheader("Minutes spent on courses:")
@@ -36,6 +42,14 @@ def member_page(tabs):
             st.subheader("Total courses enrolled:")
             st.subheader(f" 💻{total_enrolled}")
         
+        if total_minutes >= 4000:
+            st.image(jay, caption= 'You are doing great!')
+        elif total_minutes < 4000 and (total_minutes>=2000):
+            st.image(ok, caption ='You are doing well.')
+        elif total_minutes < 2000 and (total_minutes>=600):
+            st.image(poor, caption='Try to learn more.')
+        else:
+            st.image(no, caption='You are not hitting the minimum amount of training.')
         
     with tab2:
         st.header("Training Outside Udemy/Learning Studio")
