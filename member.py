@@ -1,5 +1,4 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
 from bokeh.models.widgets import Div
 import plotly.express as px
@@ -9,12 +8,8 @@ def member_page():
     st.header("I am member of ITDP")
 
     df = pd.read_excel("data/mock_data.xlsx")
-<<<<<<< HEAD
     learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
     event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
-=======
-    learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type','Name','Learning time','Status'])
->>>>>>> b7a092a8985a2b951733abcd7964e11afb243ed6
 
     # button to link to the form
 
@@ -147,7 +142,6 @@ def member_page():
         fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
         fig_comparison.update_traces(texttemplate='%{text:.2s}', textposition='outside')
         fig_comparison.update_layout(uniformtext_minsize=8, uniformtext_mode='hide', yaxis=dict(autorange="reversed"))
-<<<<<<< HEAD
         
         st.plotly_chart(fig_comparison, use_container_width=True)
         
@@ -176,7 +170,3 @@ def member_page():
             if option == name:
                 attendees = dict_of_dfs[name]
                 st.write(attendees)
-=======
-
-        st.plotly_chart(fig_comparison, use_container_width=True)
->>>>>>> b7a092a8985a2b951733abcd7964e11afb243ed6
