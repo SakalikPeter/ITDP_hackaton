@@ -54,7 +54,6 @@ def member_page():
     with tab2:
         st.header("Training Outside Udemy/Learning Studio")
         st.write("Here you can log hours outside Udemy/Learning Studio and see the status of your requests.")
-        #experimental
         with st.form("log_form", clear_on_submit=True):
             learning_type =  st.selectbox(
                 'What you want to submit:', 
@@ -70,7 +69,6 @@ def member_page():
             manager_approvals = pd.concat([manager_approvals, new_df], ignore_index=True)
             manager_approvals.to_excel("data/manager_approvals.xlsx", index = False)
 
-        # This is a mock table    
         st.subheader('Status of my requests')
         def color_negative(v, color):
             if v == 'Declined':
@@ -144,8 +142,7 @@ def member_page():
         df = df.nlargest(n=top_n, columns=['Minutes Video Consumed'])
 
         #extract names from Email
-        names = df['Email'].str.split('@', expand=True)[0]
-        df['Name'] = names
+        df['Name'] = df['Email'].str.split('@', expand=True)[0]
 
         #BAR CHART
         fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
