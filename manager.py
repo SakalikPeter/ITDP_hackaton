@@ -5,26 +5,17 @@ from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 
 def aggrid_interactive_table(df: pd.DataFrame):
-    """Creates an st-aggrid interactive table based on a dataframe.
-
-    Args:
-        df (pd.DataFrame]): Source dataframe
-
-    Returns:
-        dict: The selected row
-    """
-    options = GridOptionsBuilder.from_dataframe(
-        df, enableRowGroup=True, enableValue=True, enablePivot=True
+    option = GridOptionsBuilder.from_dataframe(
+        df
     )
 
-    options.configure_side_bar()
+    option.configure_side_bar()
 
-    options.configure_selection("single")
+    option.configure_selection("single", use_checkbox=True)
     selection = AgGrid(
         df,
         enable_enterprise_modules=True,
-        gridOptions=options.build(),
-        # theme="light",
+        gridOptions=option.build(),
         update_mode=GridUpdateMode.MODEL_CHANGED,
         allow_unsafe_jscode=True,
     )
@@ -50,7 +41,9 @@ def manager_page():
     virtual_attendance = pd.read_excel("data/mock_data.xlsx", sheet_name='Virtual Attendance')
     event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
 
-    tab1, tab2, tab3, tab4 = st.tabs(["Training Data", "Virtual Attendance", "Event Sign-Up", "Stats"])
+    approval_data = pd.read_excel('data/manager_approvals.xlsx')
+
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Training Data", "Virtual Attendance", "Event Sign-Up", "Stats", "Approval Tab"])
 
     with tab1:
         st.header("Training Data")
@@ -165,4 +158,22 @@ def manager_page():
         left_column2, right_column2 = st.columns(2)
         left_column2.plotly_chart(fig_last_activity_by_region, use_container_width=True)
         right_column2.plotly_chart(fig2, use_container_width=True)
+
+    with tab5:
+        st.header("Training Approval")
+        st.write("Here you can approve members requests.") 
+        st.subheader('Status of requests')
+
+        for i, row in approval_data.iterrows():
+            with st.expander(f"Email: {row['Email']}, Course: {row['Name']}, Type: {row['Type']}"):
+                option = st.selectbox(
+                    'How would you like to decide?',
+                    ('Pending', 'Approve', 'Deny'), key=i)
+
+                if option == 'Approve':
+                    st.success("Request was approved.")
+                elif option == 'Deny':
+                    st.error("Request was NOT approved.")
+                else:
+                    st.warning("No decision was made yet.")
 
