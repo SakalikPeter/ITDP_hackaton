@@ -23,7 +23,7 @@ def aggrid_interactive_table(df: pd.DataFrame):
     return selection
 
 def aggrid_selection(selection):
-    word_dict = {'y': 'Attended', 'n': 'Not Attended', 'x': 'Sign Up', 'None': 'Not Sign Up'}
+    word_dict = {'y': 'Attended', 'n': 'Not Attended', 'x': 'Signed Up', 'None': 'Not Signed Up'}
     
     if selection['selected_rows']:
         row = selection['selected_rows'][0]

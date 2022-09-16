@@ -1,16 +1,15 @@
 import streamlit as st
 import pandas as pd
-from bokeh.models.widgets import Div
 import plotly.express as px
 from PIL import Image
 
 def member_page():
-    st.header("I am member of ITDP")
 
     df = pd.read_excel("data/mock_data.xlsx")
-    learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
     event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
-
+    #experimental
+    learning_log = pd.read_excel("data/learning_log.xlsx")
+    
     # button to link to the form
 
     tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])
@@ -54,17 +53,25 @@ def member_page():
     with tab2:
         st.header("Training Outside Udemy/Learning Studio")
         st.write("Here you can log hours outside Udemy/Learning Studio and see the status of your requests.")
+        #experimental
+        with st.form("log_form", clear_on_submit=True):
+            learning_type =  st.selectbox(
+                'What you want to submit:', 
+                ['Course outside Udemy/Learning Studio', 'Exercises for Udemy courses', 'Learning project']
+                )
+            course_name = st.text_input('Course Name')
+            time = st.text_input('Learning Time in Hours')
+            submit = st.form_submit_button('Submit')
 
-        if st.button('Log hours outside Udemy and Learning Studio'):
-            js = "window.open('https://forms.office.com/r/kN3vNjKJC5')"  # New tab or window
-            html = '<img src onerror="{}">'.format(js)
-            div = Div(text=html)
-            st.bokeh_chart(div)
+        if submit:
+            new_data = {"Learning_type": learning_type, "Course_Name": course_name, "Time": int(time), "Status": "Pending"}
+            learning_log = learning_log.append(new_data, ignore_index=True)
+            learning_log.to_excel("data/learning_log.xlsx", index = False)
 
         # This is a mock table    
         st.subheader('Status of my requests')
         def color_negative(v, color):
-            if v == 'Denied':
+            if v == 'Declined':
                 color = 'red'
             elif v == 'Approved':
                 color = 'green'
@@ -73,8 +80,8 @@ def member_page():
             else:
                 color = None
             return f"color: {color};"
-        learning_log_data=learning_log_data.style.applymap(color_negative, color='')
-        st.table(learning_log_data)
+        learning_log=learning_log.style.applymap(color_negative, color='')
+        st.table(learning_log)
 
         # def highlight_cells(val):
     #     color = 'red' if "Denied" in val else 'white'
