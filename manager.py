@@ -1,16 +1,15 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  # pip install plotly-express
+import plotly.express as px
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 
 def aggrid_interactive_table(df: pd.DataFrame):
     option = GridOptionsBuilder.from_dataframe(
-        df
+         df, enableRowGroup=True, enableValue=True, enablePivot=True
     )
 
     option.configure_side_bar()
-
     option.configure_selection("single", use_checkbox=True)
     selection = AgGrid(
         df,
@@ -18,8 +17,8 @@ def aggrid_interactive_table(df: pd.DataFrame):
         gridOptions=option.build(),
         update_mode=GridUpdateMode.MODEL_CHANGED,
         allow_unsafe_jscode=True,
+        theme="material"
     )
-
     return selection
 
 def aggrid_selection(selection):
@@ -43,24 +42,25 @@ def manager_page():
 
     approval_data = pd.read_excel('data/manager_approvals.xlsx')
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Training Data", "Virtual Attendance", "Event Sign-Up", "Stats", "Approval Tab"])
+    tab1, tab2, tab3 = st.tabs(["Table filters", "Stats", "Approval Tab"])
 
     with tab1:
-        st.header("Training Data")
-        selection = aggrid_interactive_table(df=training_data)
-        aggrid_selection(selection)
+        with st.expander("Training data"):
+            st.header("Training Data")
+            selection = aggrid_interactive_table(df=training_data)
+            aggrid_selection(selection)
+
+        with st.expander("Virtual Attendance"):
+            st.header("Virtual Attendance")
+            selection = aggrid_interactive_table(df=virtual_attendance)
+            aggrid_selection(selection)
+        
+        with st.expander("Event Sign-Up"):
+            st.header("Event Sign-Up")
+            selection = aggrid_interactive_table(df=event_sign_up)
+            aggrid_selection(selection)
 
     with tab2:
-        st.header("Virtual Attendance")
-        selection = aggrid_interactive_table(df=virtual_attendance)
-        aggrid_selection(selection)
-        
-    with tab3:
-        st.header("Event Sign-Up")
-        selection = aggrid_interactive_table(df=event_sign_up)
-        aggrid_selection(selection)
-
-    with tab4:
         st.header("Filter Here:")
 
         left,mid= st.columns(2)
@@ -159,7 +159,7 @@ def manager_page():
         left_column2.plotly_chart(fig_last_activity_by_region, use_container_width=True)
         right_column2.plotly_chart(fig2, use_container_width=True)
 
-    with tab5:
+    with tab3:
         st.header("Training Approval")
         st.write("Here you can approve members requests.") 
         st.subheader('Status of requests')
