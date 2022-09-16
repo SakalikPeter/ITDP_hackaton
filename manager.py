@@ -22,7 +22,7 @@ def aggrid_interactive_table(df: pd.DataFrame):
     return selection
 
 def aggrid_selection(selection):
-    word_dict = {'y': 'Attended', 'n': 'Not Attended', 'x': 'Sign Up', 'None': 'Not Sign Up'}
+    word_dict = {'y': 'Attended', 'n': 'Not Attended', 'x': 'Signed Up', 'None': 'Not Signed Up'}
     
     if selection['selected_rows']:
         row = selection['selected_rows'][0]
@@ -163,8 +163,9 @@ def manager_page():
         st.header("Training Approval")
         st.write("Here you can approve members requests.") 
         st.subheader('Status of requests')
-
-        for i, row in approval_data.iterrows():
+        
+        approval_data = approval_data.query('Status == "Pending"')
+        for i, row in approval_data.iterrows():     
             with st.expander(f"Email: {row['Email']}, Course: {row['Name']}, Type: {row['Type']}"):
                 option = st.selectbox(
                     'How would you like to decide?',

@@ -1,22 +1,22 @@
 import streamlit as st
 import pandas as pd
-from bokeh.models.widgets import Div
 import plotly.express as px
 from PIL import Image
 
 def member_page():
-    st.header("I am member of ITDP")
 
     df = pd.read_excel("data/mock_data.xlsx")
-    learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
     event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
-
+    #experimental
+    manager_approvals = pd.read_excel("data/manager_approvals.xlsx")
+    
     # button to link to the form
-
+    mock_user = df.iloc[3]
+    mock_user_email = mock_user['Email']
+    
     tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])
 
     with tab1:
-        mock_user = df.iloc[3]
 
         st.header("My Overview")
         st.subheader(f'You are logged in as {mock_user["Email"]}')
@@ -54,17 +54,24 @@ def member_page():
     with tab2:
         st.header("Training Outside Udemy/Learning Studio")
         st.write("Here you can log hours outside Udemy/Learning Studio and see the status of your requests.")
+        with st.form("log_form", clear_on_submit=True):
+            learning_type =  st.selectbox(
+                'What you want to submit:', 
+                ['Course outside Udemy/Learning Studio', 'Exercises for Udemy courses', 'Learning project']
+                )
+            course_name = st.text_input('Course/Project Name')
+            time = st.text_input('Learning Time in Hours')
+            submit = st.form_submit_button('Submit')
 
-        if st.button('Log hours outside Udemy and Learning Studio'):
-            js = "window.open('https://forms.office.com/r/kN3vNjKJC5')"  # New tab or window
-            html = '<img src onerror="{}">'.format(js)
-            div = Div(text=html)
-            st.bokeh_chart(div)
+        if submit:
+            new_data = {"Email": [mock_user_email], "Type": [learning_type], "Name": [course_name], "Time": [int(time)], "Status": ["Pending"]}
+            new_df = pd.DataFrame(new_data)
+            manager_approvals = pd.concat([manager_approvals, new_df], ignore_index=True)
+            manager_approvals.to_excel("data/manager_approvals.xlsx", index = False)
 
-        # This is a mock table    
         st.subheader('Status of my requests')
         def color_negative(v, color):
-            if v == 'Denied':
+            if v == 'Declined':
                 color = 'red'
             elif v == 'Approved':
                 color = 'green'
@@ -73,8 +80,8 @@ def member_page():
             else:
                 color = None
             return f"color: {color};"
-        learning_log_data=learning_log_data.style.applymap(color_negative, color='')
-        st.table(learning_log_data)
+        manager_approvals = manager_approvals.style.applymap(color_negative, color='')
+        st.table(manager_approvals)
 
         # def highlight_cells(val):
     #     color = 'red' if "Denied" in val else 'white'
@@ -135,8 +142,7 @@ def member_page():
         df = df.nlargest(n=top_n, columns=['Minutes Video Consumed'])
 
         #extract names from Email
-        names = df['Email'].str.split('@', expand=True)[0]
-        df['Name'] = names
+        df['Name'] = df['Email'].str.split('@', expand=True)[0]
 
         #BAR CHART
         fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
@@ -149,7 +155,6 @@ def member_page():
         st.header("Events")
         st.write("Here you can find information about upcoming events.")
         st.subheader('You are enrolled to these events:')
-        mock_user_email = mock_user['Email']
         
         for data in event_sign_up.columns:
             filtered_data = event_sign_up.query('Email == @mock_user_email')
