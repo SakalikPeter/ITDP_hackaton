@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
 from bokeh.models.widgets import Div
 import plotly.express as px
@@ -9,10 +10,11 @@ def member_page():
     
     df = pd.read_excel("data/mock_data.xlsx")
     learning_log_data = pd.read_excel('data/learning_time_log.xlsx', usecols=['Type', 'Name','Learning time','Status'])
-    
+    event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
+
     # button to link to the form
 
-    tab1, tab2, tab3 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare"])
+    tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])
 
     with tab1:
         mock_user = df.iloc[3]
@@ -114,3 +116,29 @@ def member_page():
         fig_comparison.update_layout(uniformtext_minsize=8, uniformtext_mode='hide', yaxis=dict(autorange="reversed"))
         
         st.plotly_chart(fig_comparison, use_container_width=True)
+        
+    with tab4:
+        st.header("Events")
+        st.write("Here you can find information about upcoming events.")
+        st.subheader('You are enrolled to these events:')
+        mock_user_email = mock_user['Email']
+        
+        for data in event_sign_up.columns:
+            filtered_data = event_sign_up.query('Email == @mock_user_email')
+            for x in filtered_data[data]:
+                if x == 'x':
+                    st.write(f'{data}')
+
+        st.subheader('See who is coming to the events:')
+
+        #extract names from Email - events tab
+        event_sign_up['Name'] = event_sign_up['Email'].str.split('@', expand=True)[0]
+        dict_of_dfs = {f'{i}':event_sign_up.filter(['Name', i], axis =1).dropna()['Name'] for i in event_sign_up.columns[1:-1]}
+
+        event_list = list(dict_of_dfs.keys())
+        option = st.selectbox('Please select event:', event_list)
+        
+        for name, df in dict_of_dfs.items():
+            if option == name:
+                attendees = dict_of_dfs[name]
+                st.write(attendees)
