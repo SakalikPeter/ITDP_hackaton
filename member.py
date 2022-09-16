@@ -8,14 +8,15 @@ def member_page():
     df = pd.read_excel("data/mock_data.xlsx")
     event_sign_up = pd.read_excel("data/mock_data.xlsx", sheet_name='Event Sign-Up')
     #experimental
-    learning_log = pd.read_excel("data/learning_log.xlsx")
+    manager_approvals = pd.read_excel("data/manager_approvals.xlsx")
     
     # button to link to the form
-
+    mock_user = df.iloc[3]
+    mock_user_email = mock_user['Email']
+    
     tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])
 
     with tab1:
-        mock_user = df.iloc[3]
 
         st.header("My Overview")
         st.subheader(f'You are logged in as {mock_user["Email"]}')
@@ -59,14 +60,15 @@ def member_page():
                 'What you want to submit:', 
                 ['Course outside Udemy/Learning Studio', 'Exercises for Udemy courses', 'Learning project']
                 )
-            course_name = st.text_input('Course Name')
+            course_name = st.text_input('Course/Project Name')
             time = st.text_input('Learning Time in Hours')
             submit = st.form_submit_button('Submit')
 
         if submit:
-            new_data = {"Learning_type": learning_type, "Course_Name": course_name, "Time": int(time), "Status": "Pending"}
-            learning_log = learning_log.append(new_data, ignore_index=True)
-            learning_log.to_excel("data/learning_log.xlsx", index = False)
+            new_data = {"Email": [mock_user_email], "Type": [learning_type], "Name": [course_name], "Time": [int(time)], "Status": ["Pending"]}
+            new_df = pd.DataFrame(new_data)
+            manager_approvals = pd.concat([manager_approvals, new_df], ignore_index=True)
+            manager_approvals.to_excel("data/manager_approvals.xlsx", index = False)
 
         # This is a mock table    
         st.subheader('Status of my requests')
@@ -80,8 +82,8 @@ def member_page():
             else:
                 color = None
             return f"color: {color};"
-        learning_log=learning_log.style.applymap(color_negative, color='')
-        st.table(learning_log)
+        manager_approvals = manager_approvals.style.applymap(color_negative, color='')
+        st.table(manager_approvals)
 
         # def highlight_cells(val):
     #     color = 'red' if "Denied" in val else 'white'
@@ -156,7 +158,6 @@ def member_page():
         st.header("Events")
         st.write("Here you can find information about upcoming events.")
         st.subheader('You are enrolled to these events:')
-        mock_user_email = mock_user['Email']
         
         for data in event_sign_up.columns:
             filtered_data = event_sign_up.query('Email == @mock_user_email')

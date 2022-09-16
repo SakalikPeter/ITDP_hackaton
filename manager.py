@@ -163,8 +163,9 @@ def manager_page():
         st.header("Training Approval")
         st.write("Here you can approve members requests.") 
         st.subheader('Status of requests')
-
-        for i, row in approval_data.iterrows():
+        
+        approval_data = approval_data.query('Status == "Pending"')
+        for i, row in approval_data.iterrows():     
             with st.expander(f"Email: {row['Email']}, Course: {row['Name']}, Type: {row['Type']}"):
                 option = st.selectbox(
                     'How would you like to decide?',
