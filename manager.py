@@ -170,8 +170,6 @@ def manager_page():
         st.header("Training Approval")
         st.write("Here you can approve members requests.") 
         st.subheader('Status of requests')
-        
-        print(approval_data.head())
 
         pending_data = approval_data.query('Status == "Pending"')
         for i, row in pending_data.iterrows():     
@@ -187,7 +185,11 @@ def manager_page():
                     approval_data.to_excel("data/manager_approvals.xlsx", index = False)
                     df.loc[df['Email'] == row['Email'], 'No# of New Courses Enrolled'] += 1
                     df.loc[df['Email'] == row['Email'], 'No# of New Courses Started'] += 1
-                    df.to_excel("data/mock_data.xlsx", index = False)
+                    df.loc[df['Email'] == row['Email'], 'Minutes Video Consumed'] += (row['Time'] * 60)
+                    with pd.ExcelWriter('data/mock_data.xlsx') as writer:  
+                        df.to_excel(writer, sheet_name='Training Data')
+                        virtual_attendance.to_excel(writer, sheet_name='Virtual Attendance')
+                        event_sign_up.to_excel(writer, sheet_name='Event Sign-Up')
                     placeholder.empty()
                 elif option == 'Deny':
                     st.error("Request was NOT approved.")

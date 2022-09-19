@@ -11,7 +11,7 @@ def member_page():
     manager_approvals = pd.read_excel("data/manager_approvals.xlsx")
     
     # button to link to the form
-    mock_user = df.iloc[3]
+    mock_user = df.iloc[0]
     mock_user_email = mock_user['Email']
     
     tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])
@@ -80,26 +80,9 @@ def member_page():
             else:
                 color = None
             return f"color: {color};"
-        manager_approvals = manager_approvals.style.applymap(color_negative, color='')
-        st.table(manager_approvals)
-
-        # def highlight_cells(val):
-    #     color = 'red' if "Denied" in val else 'white'
-    #
-    #     (st.dataframe.style.applymap(highlight_cells, subset=["Denied"]).to_excel(learning_log_data, index=False))
-    #     styles = st.dataframe.style.apply(highlight_cells, axis=None)
-    #     styles.to_excel(learning_log_data)
-    #     return f'background-color: {color}'
-
-
-            #color = 'green' if 'Approved' in val else 'white'
-            #(st.dataframe.style.applymap(highlight_cells, subset=['Approved'])
-             #.to_excel("learning_time_log.xlsx", index=False))
-            #color = 'orange' if 'Pending' in val else 'white'
-            #(st.dataframe.style.applymap(highlight_cells, subset=['Pending'])
-             #.to_excel("learning_time_log.xlsx", index=False))
-
-
+        select_user = manager_approvals.loc[manager_approvals['Email'] == mock_user_email]
+        select_user = select_user.style.applymap(color_negative, color='')
+        st.table(select_user)
 
     with tab3:
         st.header("Compare")
