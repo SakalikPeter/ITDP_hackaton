@@ -86,7 +86,7 @@ def member_page():
 
     with tab3:
         st.header("Compare")
-        st.write("Here you can compare yourself and your group to other groups and members.")
+#        st.write("Here you can compare yourself and your group to other groups and members.")
 
         st.subheader("Filter Here:")
 
