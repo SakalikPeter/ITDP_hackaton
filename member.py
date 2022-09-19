@@ -11,7 +11,7 @@ def member_page():
     manager_approvals = pd.read_excel("data/manager_approvals.xlsx")
     
     # button to link to the form
-    mock_user = df.iloc[0]
+    mock_user = df.iloc[3]
     mock_user_email = mock_user['Email']
     
     tab1, tab2, tab3, tab4 = st.tabs(["My Overview", "Training Outside Udemy/Learning Studio", "Compare", "Events"])

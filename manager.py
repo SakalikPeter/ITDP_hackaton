@@ -7,8 +7,8 @@ from st_aggrid.shared import GridUpdateMode
 def desicionFunc(df_row, selected, status):
     if df_row['Email'] == selected['Email'] and df_row['Type'] == selected['Type'] and df_row['Name'] == selected['Name'] and status == 'Approved':
         return 'Approved'
-    elif df_row['Email'] == selected['Email'] and df_row['Type'] == selected['Type'] and df_row['Name'] == selected['Name'] and status == 'Denied':
-        return 'Approved'
+    elif df_row['Email'] == selected['Email'] and df_row['Type'] == selected['Type'] and df_row['Name'] == selected['Name'] and status == 'Declined':
+        return 'Declined'
     return df_row['Status']
 
 def aggrid_interactive_table(df: pd.DataFrame):
@@ -135,7 +135,7 @@ def manager_page():
             x="Minutes Video Consumed",
             y=last_activity_by_region.index,
             orientation="h",
-            title="<b>Last activity by region</b>",
+            title="<b>Consumed minutes based on no of enrolled courses</b>",
             color_discrete_sequence=["#0083B8"] * len(last_activity_by_region),
             template="plotly_white",
         )
@@ -177,7 +177,7 @@ def manager_page():
                 placeholder = st.empty()
                 option = placeholder.selectbox(
                     'How would you like to decide?',
-                    ('Pending', 'Approve', 'Deny'), key=i)
+                    ('Pending', 'Approve', 'Decline'), key=i)
 
                 if option == 'Approve':
                     st.success("Request was approved.")
@@ -187,13 +187,13 @@ def manager_page():
                     df.loc[df['Email'] == row['Email'], 'No# of New Courses Started'] += 1
                     df.loc[df['Email'] == row['Email'], 'Minutes Video Consumed'] += (row['Time'] * 60)
                     with pd.ExcelWriter('data/mock_data.xlsx') as writer:  
-                        df.to_excel(writer, sheet_name='Training Data')
-                        virtual_attendance.to_excel(writer, sheet_name='Virtual Attendance')
-                        event_sign_up.to_excel(writer, sheet_name='Event Sign-Up')
+                        df.to_excel(writer, sheet_name='Training Data', index = False)
+                        virtual_attendance.to_excel(writer, sheet_name='Virtual Attendance', index = False)
+                        event_sign_up.to_excel(writer, sheet_name='Event Sign-Up', index = False)
                     placeholder.empty()
-                elif option == 'Deny':
+                elif option == 'Decline':
                     st.error("Request was NOT approved.")
-                    approval_data['Status'] = approval_data.apply(lambda x: desicionFunc(x, row, 'Denied'), axis=1)
+                    approval_data['Status'] = approval_data.apply(lambda x: desicionFunc(x, row, 'Declined'), axis=1)
                     approval_data.to_excel("data/manager_approvals.xlsx", index = False)
                     placeholder.empty()
                 else:
