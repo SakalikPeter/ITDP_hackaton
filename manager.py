@@ -4,6 +4,13 @@ import plotly.express as px
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 
+def desicionFunc(df_row, selected, status):
+    if df_row['Email'] == selected['Email'] and df_row['Type'] == selected['Type'] and df_row['Name'] == selected['Name'] and status == 'Approved':
+        return 'Approved'
+    elif df_row['Email'] == selected['Email'] and df_row['Type'] == selected['Type'] and df_row['Name'] == selected['Name'] and status == 'Denied':
+        return 'Approved'
+    return df_row['Status']
+
 def aggrid_interactive_table(df: pd.DataFrame):
     option = GridOptionsBuilder.from_dataframe(
          df, enableRowGroup=True, enableValue=True, enablePivot=True
@@ -164,17 +171,29 @@ def manager_page():
         st.write("Here you can approve members requests.") 
         st.subheader('Status of requests')
         
-        approval_data = approval_data.query('Status == "Pending"')
-        for i, row in approval_data.iterrows():     
+        print(approval_data.head())
+
+        pending_data = approval_data.query('Status == "Pending"')
+        for i, row in pending_data.iterrows():     
             with st.expander(f"Email: {row['Email']}, Course: {row['Name']}, Type: {row['Type']}"):
-                option = st.selectbox(
+                placeholder = st.empty()
+                option = placeholder.selectbox(
                     'How would you like to decide?',
                     ('Pending', 'Approve', 'Deny'), key=i)
 
                 if option == 'Approve':
                     st.success("Request was approved.")
+                    approval_data['Status'] = approval_data.apply(lambda x: desicionFunc(x, row, 'Approved'), axis=1)
+                    approval_data.to_excel("data/manager_approvals.xlsx", index = False)
+                    df.loc[df['Email'] == row['Email'], 'No# of New Courses Enrolled'] += 1
+                    df.loc[df['Email'] == row['Email'], 'No# of New Courses Started'] += 1
+                    df.to_excel("data/mock_data.xlsx", index = False)
+                    placeholder.empty()
                 elif option == 'Deny':
                     st.error("Request was NOT approved.")
+                    approval_data['Status'] = approval_data.apply(lambda x: desicionFunc(x, row, 'Denied'), axis=1)
+                    approval_data.to_excel("data/manager_approvals.xlsx", index = False)
+                    placeholder.empty()
                 else:
                     st.warning("No decision was made yet.")
 
