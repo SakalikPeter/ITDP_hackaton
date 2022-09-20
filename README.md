@@ -14,7 +14,6 @@ This is our project as a part of hackaton FY23.
     ```
         pip install pandas
         pip install streamlit
-        pip install streamlit-on-Hover-tabs
         pip install plotly-express
         pip install streamlit-aggrid
         pip install streamlit-authenticator==0.1.5

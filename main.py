@@ -1,13 +1,11 @@
 import streamlit as st
-import pandas as pd
-from st_on_hover_tabs import on_hover_tabs
 from manager import manager_page
 from member import member_page
 import pickle
 import streamlit_authenticator as stauth
 from pathlib import Path
-st.set_page_config(layout="wide")
 
+st.set_page_config(layout="wide")
 
 names = ["ITDP MEMBER", "ITDP MANAGER"]
 usernames = ["itdp_member", "itdp_manager"]
@@ -15,7 +13,6 @@ usernames = ["itdp_member", "itdp_manager"]
 file_path = Path(__file__).parent / "keygen/hashed_pw.pkl"
 with file_path.open("rb") as file:
     hashed_passwords = pickle.load(file)
-
 
 authenticator = stauth.Authenticate(names, usernames, hashed_passwords,
     "sales_dashboard", "abcdef", cookie_expiry_days=30)
@@ -42,4 +39,3 @@ elif authentication_status and username == "itdp_member":
         st.markdown(f"**Welcome {name}**")
         authenticator.logout("Logout")
     member_page()
-    
