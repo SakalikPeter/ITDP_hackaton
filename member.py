@@ -120,19 +120,22 @@ def member_page():
         df = df.query(
             "Groups == @groups  & `L5 Mgr Name` ==@manager_name & `Work Country` == @country"
         )
-
-        #TOP N
-        df = df.nlargest(n=top_n, columns=['Minutes Video Consumed'])
-
-        #extract names from Email
-        df['Name'] = df['Email'].str.split('@', expand=True)[0]
-
-        #BAR CHART
-        fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
-        fig_comparison.update_traces(texttemplate='%{text:.2s}', textposition='outside')
-        fig_comparison.update_layout(uniformtext_minsize=8, uniformtext_mode='hide', yaxis=dict(autorange="reversed"))
         
-        st.plotly_chart(fig_comparison, use_container_width=True)
+        if df.empty:
+            st.write("There is no such record!")
+        else:
+            #TOP N
+            df = df.nlargest(n=top_n, columns=['Minutes Video Consumed'])
+            
+            #extract names from Email
+            df['Name'] = df['Email'].str.split('@', expand=True)[0]
+        
+            #BAR CHART
+            fig_comparison = px.bar(df, x='Minutes Video Consumed', y='Name', text='Minutes Video Consumed',orientation='h')
+            fig_comparison.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+            fig_comparison.update_layout(uniformtext_minsize=8, uniformtext_mode='hide', yaxis=dict(autorange="reversed"))
+            st.plotly_chart(fig_comparison, use_container_width=True)
+        
         
     with tab4:
         st.header("Events")
